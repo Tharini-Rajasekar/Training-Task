@@ -1,0 +1,282 @@
+Mar 06, 2024 1:54:43 PM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: No operations allowed after connection closed.
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:403)
+	at com.mysql.jdbc.Util.getInstance(Util.java:386)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:919)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:898)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:887)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:861)
+	at com.mysql.jdbc.ConnectionImpl.throwConnectionClosedException(ConnectionImpl.java:1182)
+	at com.mysql.jdbc.ConnectionImpl.checkClosed(ConnectionImpl.java:1177)
+	at com.mysql.jdbc.ConnectionImpl.prepareStatement(ConnectionImpl.java:4037)
+	at com.mysql.jdbc.ConnectionImpl.prepareStatement(ConnectionImpl.java:4006)
+	at task.Login.customerLogin(Login.java:54)
+	at test.BankTest.main(BankTest.java:84)
+
+Mar 06, 2024 1:59:50 PM test.BankTest logCause
+SEVERE: Exception occurred: Invalid User
+Mar 11, 2024 7:04:32 PM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+java.sql.SQLException: Column 'ID' not found.
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:898)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:887)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:861)
+	at com.mysql.jdbc.ResultSetImpl.findColumn(ResultSetImpl.java:1069)
+	at com.mysql.jdbc.ResultSetImpl.getInt(ResultSetImpl.java:2559)
+	at task.Login.getEmployeeDetails(Login.java:102)
+	at test.BankTest.main(BankTest.java:257)
+
+Mar 12, 2024 10:05:13 AM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+java.sql.SQLException: Column 'ID' not found.
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:898)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:887)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:861)
+	at com.mysql.jdbc.ResultSetImpl.findColumn(ResultSetImpl.java:1069)
+	at com.mysql.jdbc.ResultSetImpl.getInt(ResultSetImpl.java:2559)
+	at task.Login.getEmployeeDetails(Login.java:102)
+	at test.BankTest.main(BankTest.java:257)
+
+Mar 12, 2024 10:33:28 AM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'Balance' in 'field list'
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:403)
+	at com.mysql.jdbc.Util.getInstance(Util.java:386)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3933)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3869)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2524)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2675)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2465)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1915)
+	at com.mysql.jdbc.PreparedStatement.executeUpdateInternal(PreparedStatement.java:2136)
+	at com.mysql.jdbc.PreparedStatement.executeUpdateInternal(PreparedStatement.java:2070)
+	at com.mysql.jdbc.PreparedStatement.executeLargeUpdate(PreparedStatement.java:5187)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2055)
+	at task.Admin.createAccount(Admin.java:122)
+	at test.BankTest.main(BankTest.java:723)
+
+Mar 12, 2024 10:42:07 AM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+java.sql.SQLException: Column 'Amount' not found.
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:898)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:887)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:861)
+	at com.mysql.jdbc.ResultSetImpl.findColumn(ResultSetImpl.java:1069)
+	at com.mysql.jdbc.ResultSetImpl.getDouble(ResultSetImpl.java:2244)
+	at task.Customer.checkBalance(Customer.java:92)
+	at test.BankTest.main(BankTest.java:736)
+
+Mar 12, 2024 10:43:54 AM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+java.sql.SQLException: Parameter number 1 is not an OUT parameter
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:898)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:887)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:861)
+	at com.mysql.jdbc.CallableStatement.checkIsOutputParam(CallableStatement.java:609)
+	at com.mysql.jdbc.CallableStatement.registerOutParameter(CallableStatement.java:1794)
+	at task.Customer.getTransactionId(Customer.java:304)
+	at task.Customer.transferFund(Customer.java:147)
+	at test.BankTest.main(BankTest.java:762)
+
+Mar 12, 2024 10:49:20 AM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+java.sql.SQLException: Parameter number 1 is not an OUT parameter
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:898)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:887)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:861)
+	at com.mysql.jdbc.CallableStatement.checkIsOutputParam(CallableStatement.java:609)
+	at com.mysql.jdbc.CallableStatement.registerOutParameter(CallableStatement.java:1794)
+	at task.Customer.getTransactionId(Customer.java:305)
+	at task.Customer.transferFund(Customer.java:147)
+	at test.BankTest.main(BankTest.java:762)
+
+Mar 12, 2024 10:53:17 AM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'Amount' in 'field list'
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:403)
+	at com.mysql.jdbc.Util.getInstance(Util.java:386)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3933)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3869)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2524)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2675)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2465)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1915)
+	at com.mysql.jdbc.PreparedStatement.executeUpdateInternal(PreparedStatement.java:2136)
+	at com.mysql.jdbc.PreparedStatement.executeUpdateInternal(PreparedStatement.java:2070)
+	at com.mysql.jdbc.PreparedStatement.executeLargeUpdate(PreparedStatement.java:5187)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2055)
+	at task.Customer.withdrawAmount(Customer.java:252)
+	at task.Customer.transferFund(Customer.java:152)
+	at test.BankTest.main(BankTest.java:762)
+
+Mar 12, 2024 10:53:58 AM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'Amount' in 'field list'
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:403)
+	at com.mysql.jdbc.Util.getInstance(Util.java:386)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3933)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3869)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2524)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2675)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2465)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1915)
+	at com.mysql.jdbc.PreparedStatement.executeUpdateInternal(PreparedStatement.java:2136)
+	at com.mysql.jdbc.PreparedStatement.executeUpdateInternal(PreparedStatement.java:2070)
+	at com.mysql.jdbc.PreparedStatement.executeLargeUpdate(PreparedStatement.java:5187)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2055)
+	at task.Customer.withdrawAmount(Customer.java:252)
+	at task.Customer.transferFund(Customer.java:152)
+	at test.BankTest.main(BankTest.java:762)
+
+Mar 12, 2024 10:56:09 AM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+java.sql.SQLException: Parameter index out of range (7 > number of parameters, which is 6).
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:898)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:887)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:861)
+	at com.mysql.jdbc.PreparedStatement.checkBounds(PreparedStatement.java:3385)
+	at com.mysql.jdbc.PreparedStatement.setInternal(PreparedStatement.java:3370)
+	at com.mysql.jdbc.PreparedStatement.setString(PreparedStatement.java:4095)
+	at task.Customer.addTransaction(Customer.java:289)
+	at task.Customer.transferFund(Customer.java:156)
+	at test.BankTest.main(BankTest.java:762)
+
+Mar 12, 2024 10:58:06 AM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'TXN_Type' in 'field list'
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:403)
+	at com.mysql.jdbc.Util.getInstance(Util.java:386)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3933)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3869)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2524)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2675)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2465)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1915)
+	at com.mysql.jdbc.PreparedStatement.executeUpdateInternal(PreparedStatement.java:2136)
+	at com.mysql.jdbc.PreparedStatement.executeUpdateInternal(PreparedStatement.java:2070)
+	at com.mysql.jdbc.PreparedStatement.executeLargeUpdate(PreparedStatement.java:5187)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2055)
+	at task.Customer.addTransaction(Customer.java:293)
+	at task.Customer.transferFund(Customer.java:156)
+	at test.BankTest.main(BankTest.java:762)
+
+Mar 12, 2024 11:04:41 AM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+com.mysql.jdbc.MysqlDataTruncation: Data truncation: Data too long for column 'TXN_Type' at row 1
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3931)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3869)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2524)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2675)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2465)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1915)
+	at com.mysql.jdbc.PreparedStatement.executeUpdateInternal(PreparedStatement.java:2136)
+	at com.mysql.jdbc.PreparedStatement.executeUpdateInternal(PreparedStatement.java:2070)
+	at com.mysql.jdbc.PreparedStatement.executeLargeUpdate(PreparedStatement.java:5187)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2055)
+	at task.Customer.addTransaction(Customer.java:293)
+	at task.Customer.transferFund(Customer.java:156)
+	at test.BankTest.main(BankTest.java:762)
+
+Mar 12, 2024 11:06:48 AM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+java.sql.SQLException: Parameter index out of range (4 > number of parameters, which is 3).
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:898)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:887)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:861)
+	at com.mysql.jdbc.PreparedStatement.checkBounds(PreparedStatement.java:3385)
+	at com.mysql.jdbc.PreparedStatement.setInternal(PreparedStatement.java:3370)
+	at com.mysql.jdbc.PreparedStatement.setInternal(PreparedStatement.java:3409)
+	at com.mysql.jdbc.PreparedStatement.setInt(PreparedStatement.java:3360)
+	at task.Customer.getTransactionDetails(Customer.java:119)
+	at test.BankTest.main(BankTest.java:783)
+
+Mar 12, 2024 11:58:02 AM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+java.sql.SQLException: No value specified for parameter 4
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:898)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:887)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:861)
+	at com.mysql.jdbc.PreparedStatement.checkAllParametersSet(PreparedStatement.java:2268)
+	at com.mysql.jdbc.PreparedStatement.addBatch(PreparedStatement.java:946)
+	at task.Admin.addEmployee(Admin.java:95)
+	at test.BankTest.main(BankTest.java:998)
+
+Mar 12, 2024 12:19:15 PM test.BankTest logCause
+SEVERE: Exception occurred: Invalid Account Number
+Mar 12, 2024 12:23:30 PM test.BankTest logCause
+SEVERE: Exception occurred: Invalid Account Number
+Mar 12, 2024 12:26:56 PM test.BankTest logCause
+SEVERE: Exception occurred: Invalid Account Number
+Mar 12, 2024 12:30:21 PM test.BankTest logCause
+SEVERE: Exception occurred: Your Transaction Declined
+util.ApplicationException: Insufficient Balance
+	at task.Customer.withdrawAmount(Customer.java:259)
+	at task.Customer.transferFund(Customer.java:152)
+	at test.BankTest.main(BankTest.java:400)
+
+Mar 12, 2024 12:45:20 PM test.BankTest logCause
+SEVERE: Exception occurred: Error Ocuured During Transaction Rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: Can't call rollback when autocommit=true
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:403)
+	at com.mysql.jdbc.Util.getInstance(Util.java:386)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:919)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:898)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:887)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:861)
+	at com.mysql.jdbc.ConnectionImpl.rollback(ConnectionImpl.java:4525)
+	at task.Customer.transferFund(Customer.java:165)
+	at test.BankTest.main(BankTest.java:400)
+
+Mar 12, 2024 12:47:09 PM test.BankTest logCause
+SEVERE: Exception occurred: Invalid Account Number
+Mar 12, 2024 12:57:25 PM test.BankTest logCause
+SEVERE: Exception occurred: Invalid Account Number
+Mar 12, 2024 1:05:28 PM test.BankTest logCause
+SEVERE: Exception occurred: Invalid Account Number
+Mar 12, 2024 1:14:18 PM test.BankTest logCause
+SEVERE: Exception occurred: Invalid Account Number
+Mar 12, 2024 1:19:56 PM test.BankTest logCause
+SEVERE: Exception occurred: Invalid User
+Mar 12, 2024 1:21:41 PM test.BankTest logCause
+SEVERE: Exception occurred: Invalid User
+Mar 12, 2024 1:24:50 PM test.BankTest logCause
+SEVERE: Exception occurred: Invalid User
+Mar 12, 2024 3:11:25 PM test.BankTest logCause
+SEVERE: Exception occurred: User is Blocked
