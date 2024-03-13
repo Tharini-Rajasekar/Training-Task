@@ -1,14 +1,13 @@
-package employee;
+package task;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-
-import customer.Customer;
-import customer.CustomerDetails;
+import helperenum.UserLevel;
 import helperpojo.AccountDetails;
+import helperpojo.CustomerDetails;
 import helperpojo.Transaction;
 import helperpojo.UserDetails;
 import querybuilder.SQLKeywords;
@@ -57,7 +56,7 @@ public class Employee extends Customer{
 				prepStatement.setDate(2, date);
 				prepStatement.setString(3,user.getGender());
 				prepStatement.setString(4,user.getEmail());
-				prepStatement.setString(5,TableProp.CUSTOMER);
+				prepStatement.setInt(5,UserLevel.CUSTOMER.getLevelCode());
 				prepStatement.setLong(6,user.getMobile());
 				prepStatement.addBatch();
 			}
@@ -116,7 +115,7 @@ public class Employee extends Customer{
 			prepStatement.executeUpdate();
 		}
 		catch(SQLException e) {
-			throw new ApplicationException(BankMessage.STATEMENT_ERROR.getMessage(),e);		
+			throw new ApplicationException(BankMessage.ACCOUNT_CREATE_ERROR.getMessage(),e);		
 		}
 	}
 	public int getCustomerId(long aadhar) throws ApplicationException {
@@ -141,9 +140,9 @@ public class Employee extends Customer{
 			throw new ApplicationException(BankMessage.STATEMENT_ERROR.getMessage(),e);		
 		}
 	}
-	public List<Long> getAccounts(int customerId) throws ApplicationException{
+	public List<AccountDetails> getAccounts(int customerId) throws ApplicationException{
 		checkConnection();
-		StringBuilder query=new StringBuilder(SQLKeywords.SELECT).append(SpecialCharacters.SPACE).append(TableProp.ACCOUNT_NUMBER).append(SpecialCharacters.SPACE);
+		StringBuilder query=new StringBuilder(SQLKeywords.SELECT).append(SpecialCharacters.SPACE).append(SpecialCharacters.ASTERISK).append(SpecialCharacters.SPACE);
 		query.append(SQLKeywords.FROM).append(SpecialCharacters.SPACE).append(TableProp.ACCOUNT_TABLE).append(SpecialCharacters.SPACE);
 		query.append(SQLKeywords.WHERE).append(SpecialCharacters.SPACE);
 		query.append(TableProp.USER_ID).append(SpecialCharacters.EQUALS).append(SpecialCharacters.PLACEHOLDER).append(SpecialCharacters.SEMICOLON);
@@ -151,10 +150,16 @@ public class Employee extends Customer{
 		try(PreparedStatement prepStatement = connect.prepareStatement(sql)) {
 			prepStatement.setLong(1,customerId);
 			try(ResultSet resultSet = prepStatement.executeQuery()){
-				List<Long> accounts=Helper.getArrayList();
+				List<AccountDetails> accounts=Helper.getArrayList();
 				while(resultSet.next()) {
-					long accountNumber=resultSet.getLong(TableProp.ACCOUNT_NUMBER);
-					Helper.addElement(accounts,accountNumber);
+					AccountDetails account=new AccountDetails();
+					account.setAccountNumber(resultSet.getLong(TableProp.ACCOUNT_NUMBER));
+					account.setAccountType(resultSet.getString(TableProp.ACCOUNT_TYPE));
+					account.setBranchId(resultSet.getInt(TableProp.BRANCH_ID));
+					account.setId(customerId);
+					account.setBalance(resultSet.getDouble(TableProp.BALANCE));
+					account.setStatus(resultSet.getInt(TableProp.ACCOUNT_STATUS));
+					Helper.addElement(accounts,account);
 				}
 				return accounts;
 			}
@@ -229,7 +234,7 @@ public class Employee extends Customer{
 
 		String sql=query.toString();
 		try(PreparedStatement prepStatement = connect.prepareStatement(sql)) {
-			prepStatement.setString(1,user.getUserStatus());
+			prepStatement.setInt(1,user.getUserStatus());
 			prepStatement.setInt(2,user.getId());
 			prepStatement.setString(3,TableProp.CUSTOMER);
 			prepStatement.executeUpdate();
@@ -247,7 +252,7 @@ public class Employee extends Customer{
 		query.append(TableProp.ACCOUNT_NUMBER).append(SpecialCharacters.EQUALS).append(SpecialCharacters.PLACEHOLDER).append(SpecialCharacters.SEMICOLON);
 		String sql=query.toString();
 		try(PreparedStatement prepStatement = connect.prepareStatement(sql)) {
-			prepStatement.setString(1,account.getStatus());
+			prepStatement.setInt(1,account.getStatus());
 			prepStatement.setLong(2,account.getAccountNumber());
 			prepStatement.executeUpdate();
 		}
@@ -331,8 +336,43 @@ public class Employee extends Customer{
 			catch (SQLException e) {
 				throw new ApplicationException(BankMessage.COMMIT_ERROR.getMessage(),e);
 			}
-		}	
+		}
 	}
-
+		public CustomerDetails getCustomerDetails(int custId) throws ApplicationException {
+			//SELECT * FROM user_details JOIN customer_details ON user_details.ID =customer_details WHERE user_details.ID=?
+			checkConnection();
+			StringBuilder query=Helper.getStringBuilder(SQLKeywords.SELECT).append(SpecialCharacters.SPACE);
+			query.append(SpecialCharacters.ASTERISK).append(SpecialCharacters.SPACE);
+			query.append(SQLKeywords.FROM).append(SpecialCharacters.SPACE);
+			query.append(TableProp.USER_TABLE).append(SpecialCharacters.SPACE);
+			query.append(SQLKeywords.JOIN).append(SpecialCharacters.SPACE).append(TableProp.CUSTOMER_TABLE).append(SpecialCharacters.SPACE);
+			query.append(SQLKeywords.ON).append(SpecialCharacters.SPACE);
+			query.append(TableProp.USER_TABLE).append(SpecialCharacters.PERIOD).append(TableProp.USER_ID).append(SpecialCharacters.EQUALS);
+			query.append(TableProp.CUSTOMER_TABLE).append( SpecialCharacters.PERIOD).append(TableProp.USER_ID).append(SpecialCharacters.SPACE);
+			query.append(SQLKeywords.WHERE).append(SpecialCharacters.SPACE);
+			query.append(TableProp.USER_TABLE).append(SpecialCharacters.PERIOD).append(TableProp.USER_ID).append(SpecialCharacters.EQUALS);
+			query.append(SpecialCharacters.PLACEHOLDER).append(SpecialCharacters.SPACE).append(SpecialCharacters.SEMICOLON);
+			try(PreparedStatement prepStatement = connect.prepareStatement(query.toString())) {
+				prepStatement.setLong(1,custId);
+				try(ResultSet resultSet = prepStatement.executeQuery()){
+					CustomerDetails customer=new CustomerDetails();
+					while(resultSet.next()) {
+						customer.setName(resultSet.getString(TableProp.NAME));
+						Date date=resultSet.getDate(TableProp.DOB);
+						customer.setDob(date.toLocalDate());
+						customer.setGender(resultSet.getString(TableProp.GENDER));
+						customer.setEmail(resultSet.getString(TableProp.EMAIL));
+						customer.setMobile(resultSet.getLong(TableProp.MOBILE));
+						customer.setAadhar(resultSet.getLong(TableProp.AADHAR));
+						customer.setPan(resultSet.getString(TableProp.PAN));
+						customer.setUserStatus(resultSet.getInt(TableProp.USER_STATUS));
+					}
+					return customer;
+				}
+			}
+				catch(SQLException e) {
+					throw new ApplicationException(BankMessage.STATEMENT_ERROR.getMessage(),e);		
+				}	
+		}
 
 }

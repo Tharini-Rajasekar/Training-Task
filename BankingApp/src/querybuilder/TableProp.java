@@ -21,7 +21,7 @@ public interface TableProp {
     String AADHAR="Aadhar_Number";
     String PAN="PAN_Number";
     String EMPLOYEE_TABLE="employee_details";//table
-    String ACCESS_LEVEL="Access_Level";
+    //String ACCESS_LEVEL="Access_Level";
     String ACCOUNT_TABLE="account_details";//table
     String ACCOUNT_NUMBER="Account_Number";
     String ACCOUNT_TYPE="Account_Type";

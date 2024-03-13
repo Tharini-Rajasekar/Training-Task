@@ -58,8 +58,6 @@ public class TableCreator {
 		query.append(TableProp.EMPLOYEE_TABLE).append(SpecialCharacters.OPEN_PARENTHESIS);
 		query.append(TableProp.USER_ID).append(SpecialCharacters.SPACE).append(SQLDataTypes.INT).append(SpecialCharacters.COMMA);
 		query.append(TableProp.BRANCH_ID).append(SpecialCharacters.SPACE).append(SQLDataTypes.INT).append(SpecialCharacters.COMMA);
-		query.append(TableProp.ACCESS_LEVEL).append(SpecialCharacters.SPACE).append(SQLDataTypes.VARCHAR);
-		query.append(SpecialCharacters.OPEN_PARENTHESIS).append(TableProp.LENGTH).append(SpecialCharacters.CLOSE_PARENTHESIS).append(SpecialCharacters.COMMA);
 		query.append(SQLKeywords.FOREIGN_KEY).append(SpecialCharacters.SPACE);
 		query.append(SpecialCharacters.OPEN_PARENTHESIS).append(TableProp.USER_ID).append(SpecialCharacters.CLOSE_PARENTHESIS).append(SpecialCharacters.SPACE);
 		query.append(SQLKeywords.REFERENCES).append(SpecialCharacters.SPACE);

@@ -12,6 +12,7 @@ public enum BankMessage {
 	INVALID_PWD("Invalid Password"),
 	ACCOUNT_DELETE_ERROR("Couldn't Delete"),
 	USER_BLOCKED("User is Blocked"),
+	ACCOUNT_CREATE_ERROR("Unable to Create Account"),
 	
 	NO_SERVICE_PROVIDER("No Available Service Provider."),
 	DATABASE_CONNECTION_ERROR("Error Connecting to the Database."),

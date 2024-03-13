@@ -1,4 +1,4 @@
-package task;
+package helperenum;
 
 public enum Status {
 	ACTIVE(1),

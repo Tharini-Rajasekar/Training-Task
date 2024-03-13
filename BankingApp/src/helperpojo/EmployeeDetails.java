@@ -1,6 +1,4 @@
-package employee;
-
-import helperpojo.UserDetails;
+package helperpojo;
 
 public class EmployeeDetails extends UserDetails{
 	private int branchId;

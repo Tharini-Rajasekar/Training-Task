@@ -1,6 +1,4 @@
-package customer;
-
-import helperpojo.UserDetails;
+package helperpojo;
 
 public class CustomerDetails extends UserDetails{
 	private long aadhar;
