@@ -1,4 +1,4 @@
-package customer;
+package task;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -10,6 +10,7 @@ import java.sql.Types;
 import java.util.List;
 import dbconnection.Connector;
 import dbconnection.DBConnection;
+import helperenum.Status;
 import helperpojo.Transaction;
 import querybuilder.SQLKeywords;
 import querybuilder.SpecialCharacters;
@@ -341,7 +342,7 @@ public class Customer {
 			preparedStatement.setLong(1,accountNumber);
 			try(ResultSet resultSet = preparedStatement.executeQuery()){
 				if(resultSet.next()) {
-					if(resultSet.getString(TableProp.ACCOUNT_STATUS).equalsIgnoreCase(TableProp.BLOCKED)) {
+					if(resultSet.getInt(TableProp.ACCOUNT_STATUS)==Status.BLOCKED.getStatusCode()) {
 						return false;
 					}
 					return true;

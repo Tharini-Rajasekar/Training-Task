@@ -10,6 +10,7 @@ import java.util.Map;
 
 import dbconnection.Connector;
 import dbconnection.DBConnection;
+import helperenum.Status;
 import helperpojo.UserDetails;
 import querybuilder.SQLKeywords;
 import querybuilder.SpecialCharacters;
@@ -75,7 +76,7 @@ public class Login {
 			throw new ApplicationException(BankMessage.STATEMENT_ERROR.getMessage(),e);
 		}
 	}
-	public String getUserLevel(int userId) throws ApplicationException {
+	public int getUserLevel(int userId) throws ApplicationException {
 		checkConnection();
 		StringBuilder query=new StringBuilder(SQLKeywords.SELECT).append(SpecialCharacters.SPACE).append(TableProp.USER_LEVEL).append(SpecialCharacters.SPACE);
 		query.append(SQLKeywords.FROM).append(SpecialCharacters.SPACE).append(TableProp.USER_TABLE).append(SpecialCharacters.SPACE);
@@ -85,7 +86,7 @@ public class Login {
 			prepStatement.setInt(1,userId);
 			try(ResultSet resultSet = prepStatement.executeQuery()){
 				if(resultSet.next()) {
-					return resultSet.getString(TableProp.USER_LEVEL);
+					return resultSet.getInt(TableProp.USER_LEVEL);
 				}
 				else {
 					throw new ApplicationException(BankMessage.INVALID_USER.getMessage());
@@ -97,9 +98,9 @@ public class Login {
 		}
 	}
 
-	public Map<Integer,String> getEmployeeDetails(int userId) throws ApplicationException {
+	public int getBranchId(int userId) throws ApplicationException {
 		checkConnection();
-		StringBuilder query=new StringBuilder(SQLKeywords.SELECT).append(SpecialCharacters.SPACE).append(TableProp.BRANCH_ID).append(SpecialCharacters.COMMA).append(TableProp.ACCESS_LEVEL).append(SpecialCharacters.SPACE);
+		StringBuilder query=new StringBuilder(SQLKeywords.SELECT).append(SpecialCharacters.SPACE).append(TableProp.BRANCH_ID).append(SpecialCharacters.SPACE);
 		query.append(SQLKeywords.FROM).append(SpecialCharacters.SPACE).append(TableProp.EMPLOYEE_TABLE).append(SpecialCharacters.SPACE);
 		query.append(SQLKeywords.WHERE).append(SpecialCharacters.SPACE).append(TableProp.USER_ID).append(SpecialCharacters.EQUALS).append(SpecialCharacters.PLACEHOLDER).append(SpecialCharacters.SEMICOLON);
 		String sql=query.toString();
@@ -107,11 +108,7 @@ public class Login {
 			prepStatement.setInt(1,userId);
 			try (ResultSet resultSet = prepStatement.executeQuery()) {
 				if(resultSet.next()) {
-					Map<Integer,String> result=Helper.getHashMap();
-					int id=resultSet.getInt(TableProp.BRANCH_ID);
-					String access=resultSet.getString(TableProp.ACCESS_LEVEL);
-					Helper.addElement(result,id,access);
-					return result;
+					return resultSet.getInt(TableProp.BRANCH_ID);					
 				}
 				else {
 					throw new ApplicationException(BankMessage.INVALID_USER.getMessage());
@@ -182,9 +179,7 @@ public class Login {
 			preparedStatement.setInt(1,id);
 			try(ResultSet resultSet = preparedStatement.executeQuery()){
 				if(resultSet.next()) {
-					 String userStatus = resultSet.getString(TableProp.USER_STATUS);
-					 Helper.nullCheck(userStatus);
-					if(userStatus.equalsIgnoreCase(TableProp.BLOCKED)) {
+					if(resultSet.getInt(TableProp.USER_STATUS)==Status.BLOCKED.getStatusCode()) {
 						throw new ApplicationException(BankMessage.USER_BLOCKED.getMessage());
 					}
 				}

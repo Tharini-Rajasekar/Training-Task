@@ -8,8 +8,8 @@ public class UserDetails {
 	private long mobile;
 	private String gender; //male,female,other
 	private String email;
-	private String userStatus;  //active,blocked
-	private String userLevel; //customer,employee
+	private int userStatus;  //active,blocked
+	private int userLevel; //customer,employee
 	private String password;
 	
 	public String getPassword() {
@@ -54,18 +54,19 @@ public class UserDetails {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getUserStatus() {
+	public int getUserStatus() {
 		return userStatus;
 	}
-	public void setUserStatus(String userStatus) {
+	public void setUserStatus(int userStatus) {
 		this.userStatus = userStatus;
 	}
-	public String getUserLevel() {
+	public int getUserLevel() {
 		return userLevel;
 	}
-	public void setUserLevel(String userLevel) {
+	public void setUserLevel(int userLevel) {
 		this.userLevel = userLevel;
 	}
+	
 	
 	
 }

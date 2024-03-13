@@ -14,16 +14,18 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import org.mindrot.jbcrypt.BCrypt;
 
-import customer.Customer;
-import customer.CustomerDetails;
-import employee.Employee;
-import employee.EmployeeDetails;
+import helperenum.Status;
+import helperenum.UserLevel;
 import helperpojo.AccountDetails;
 import helperpojo.BranchDetails;
+import helperpojo.CustomerDetails;
+import helperpojo.EmployeeDetails;
 import helperpojo.Transaction;
 import helperpojo.UserDetails;
 import querybuilder.TableProp;
 import task.Admin;
+import task.Customer;
+import task.Employee;
 import task.Login;
 import util.ApplicationException;
 import util.Helper;
@@ -88,8 +90,8 @@ public class BankTest {
 					String hashedPassword=login.signIn(userId);
 					boolean passwordMatch = checkPassword(password, hashedPassword);
 					if(passwordMatch) {
-						String userLevel=login.getUserLevel(userId);
-						if(userLevel.equalsIgnoreCase("customer")) {
+						int userLevel=login.getUserLevel(userId);
+						if(userLevel==UserLevel.CUSTOMER.getLevelCode()) {
 							System.out.println("Logged In Succesfully");
 							Customer user=new Customer();
 							user.setId(userId);
@@ -254,24 +256,16 @@ public class BankTest {
 							}
 							user.disconnectDB();
 						}
-						if(userLevel.equalsIgnoreCase("employee")) {
-							Map<Integer,String> details=login.getEmployeeDetails(userId);
-							int branchId=0;
-							String access=null;
-							for(Map.Entry<Integer, String> entry : details.entrySet())	{
-								branchId=entry.getKey();
-								access=entry.getValue();
-							}
-							if(access.equalsIgnoreCase("employee")) {
+							if(userLevel==UserLevel.EMPLOYEE.getLevelCode()) {
 								System.out.println("Logged In Succesfully");
 								Employee user=new Employee();
 								user.setId(userId);
-								user.setBranchId(branchId);
+								user.setBranchId(login.getBranchId(userId));
 								user.setConnection();
 								System.out.println("Select your Service: \n1.Add New User \n2.Add Customer \n3.Create New Account ");
 								System.out.println("4.Check Balance \n5.Tranfer Fund \n6.Transaction History \n7.Deposit Fund");
 								System.out.println("8.Withdraw Amount \n9.Customer ID \n10.Update Mobile \n11.Delete Account \n12.Delete Customer");
-								System.out.println("13.Update User Status \n14.Update Account Status");
+								System.out.println("13.Update User Status \n14.Update Account Status \n15.Get Accounts \n16.Get Customer Details");
 								int service=1;
 								while(service>0) {
 									System.out.print("Enter your Service: ");
@@ -557,16 +551,15 @@ public class BankTest {
 										UserDetails customer=new UserDetails();
 										customer.setId(custId);
 										if(status==1) {
-											customer.setUserStatus(TableProp.ACTIVE);
+											customer.setUserStatus(Status.ACTIVE.getStatusCode());
 										}
 										if(status==2) {
-											customer.setUserStatus(TableProp.BLOCKED);
+											customer.setUserStatus(Status.BLOCKED.getStatusCode());
 										}
 										else {
 											System.out.println("Invalid Status");
 										}
 										try {
-											Helper.nullCheck(customer.getUserStatus());
 											user.updateUserStatus(customer);
 											System.out.println("Status Updated");
 										}
@@ -586,10 +579,10 @@ public class BankTest {
 										AccountDetails account=new AccountDetails();
 										account.setAccountNumber(accountNumber);
 										if(status==1) {
-											account.setStatus(TableProp.ACTIVE);
+											account.setStatus(Status.ACTIVE.getStatusCode());
 										}
 										if(status==2) {
-											account.setStatus(TableProp.BLOCKED);
+											account.setStatus(Status.BLOCKED.getStatusCode());
 										}
 										else {
 											System.out.println("Invalid Status");
@@ -605,6 +598,53 @@ public class BankTest {
 										}
 										break;
 									}
+									case 15:{
+										System.out.println("Enter Customer ID: ");
+										int custId=scanner.nextInt();
+										scanner.nextLine();
+										try {
+											List<AccountDetails> accounts=user.getAccounts(custId);
+											for(AccountDetails account:accounts) {
+												System.out.print("Account Number: "+account.getAccountNumber()+" | ");
+												System.out.print("Account Type: "+account.getAccountType()+" | ");
+												System.out.print("Branch Id: "+account.getBranchId()+" | ");
+												System.out.print("Account Balance "+account.getBalance()+" | ");
+												System.out.println("Account Status: "+account.getStatus());
+											}
+										}
+										catch(ApplicationException e) {
+											logCause(e);
+											System.out.println(e.getMessage());
+										}
+										break;
+									}
+									case 16:{
+										System.out.println("Enter Customer ID: ");
+										int custId=scanner.nextInt();
+										scanner.nextLine();
+										try {
+											CustomerDetails customer=user.getCustomerDetails(custId);
+											System.out.println("Name: "+customer.getName());
+											System.out.println("DOB: "+customer.getDob());
+											System.out.println("Gender: "+customer.getGender());
+											System.out.println("Email: "+customer.getEmail());
+											System.out.println("Mobile: "+customer.getName());
+											System.out.println("Aadhar Number: "+customer.getAadhar());
+											System.out.println("PAN Number: "+customer.getPan());
+											int level=customer.getUserStatus();
+											if(level==Status.ACTIVE.getStatusCode()) {
+												System.out.println("User Status: "+TableProp.ACTIVE);
+											}
+											if(level==Status.BLOCKED.getStatusCode()) {
+												System.out.println("User Status: "+TableProp.BLOCKED);	
+											}
+										}
+										catch(ApplicationException e) {
+											logCause(e);
+											System.out.println(e.getMessage());
+										}
+										break;
+									}
 									default:{
 										System.out.println("Invalid Option");
 									}
@@ -612,7 +652,7 @@ public class BankTest {
 								}
 								user.disconnectDB();
 							}
-							if(access.equalsIgnoreCase("Admin")){
+							if(userLevel==UserLevel.ADMIN.getLevelCode()){
 								System.out.println("Logged In Succesfully");
 								Admin user=new Admin();
 								user.setId(userId);
@@ -622,6 +662,7 @@ public class BankTest {
 								System.out.println("8.Withdraw Amount \n9.Customer ID \n10.Update Mobile \n11.Delete Account \n12.Delete Customer");
 								System.out.println("13.Update User Status \n14.Update Account Status");
 								System.out.println("15.Add new Employee \n16.Add New Branch \n17.Delete User \n18.Delete Branch");
+								System.out.println("19.Update Branch Details \n20.Get Accounts \n21.Get customer details \n22.get Employee details");
 								int service=1;
 								while(service>0) {
 									System.out.print("Enter your Service: ");
@@ -644,17 +685,23 @@ public class BankTest {
 												String gender=scanner.nextLine();
 												System.out.print("Enter User Email: ");
 												String email=scanner.nextLine();
-												System.out.println("Enter User Type \n1.Customer \n2.Employee: ");
+												System.out.println("Enter User Type \n1.Customer \n2.Employee \n3.Admin: ");
 												int authLevel=scanner.nextInt();
 												scanner.nextLine();
 												System.out.print("Enter User Mobile: ");
 												long mobile=scanner.nextLong();
 												scanner.nextLine();
 												if(authLevel==1) {
-													newUser.setUserLevel(TableProp.CUSTOMER);
+													newUser.setUserLevel(UserLevel.CUSTOMER.getLevelCode());
 												}
 												if(authLevel==2) {
-													newUser.setUserLevel(TableProp.EMPLOYEE);
+													newUser.setUserLevel(UserLevel.EMPLOYEE.getLevelCode());
+												}
+												if(authLevel==3) {
+													newUser.setUserLevel(UserLevel.ADMIN.getLevelCode());
+												}
+												else {
+													System.out.println("Invalid User Type");
 												}
 												newUser.setName(name);
 												newUser.setDob(LocalDate.parse(dob));
@@ -774,9 +821,9 @@ public class BankTest {
 											System.out.print("Enter account Number: ");
 											int accountNumber=scanner.nextInt();
 											scanner.nextLine();
-											int pageSize = 10; // Number of rows per page
+											int pageSize = 10;
 											int offset=0;
-											int pageNumber = 1; // Desired page number
+											int pageNumber = 1;
 											boolean nextFlag=true;
 											while(nextFlag) {
 												offset = (pageNumber - 1) * pageSize;
@@ -909,7 +956,7 @@ public class BankTest {
 										break;
 									}
 									case 13:{
-										System.out.print("Enter User ID: ");
+										System.out.print("Enter Customer ID: ");
 										int custId=scanner.nextInt();
 										System.out.println("Update Status \n1.Active \n2.Block");
 										System.out.print("Select Status: ");
@@ -918,16 +965,15 @@ public class BankTest {
 										UserDetails customer=new UserDetails();
 										customer.setId(custId);
 										if(status==1) {
-											customer.setUserStatus(TableProp.ACTIVE);
+											customer.setUserStatus(Status.ACTIVE.getStatusCode());
 										}
 										if(status==2) {
-											customer.setUserStatus(TableProp.BLOCKED);
+											customer.setUserStatus(Status.BLOCKED.getStatusCode());
 										}
 										else {
 											System.out.println("Invalid Status");
 										}
 										try {
-											Helper.nullCheck(customer.getUserStatus());
 											user.updateUserStatus(customer);
 											System.out.println("Status Updated");
 										}
@@ -947,10 +993,10 @@ public class BankTest {
 										AccountDetails account=new AccountDetails();
 										account.setAccountNumber(accountNumber);
 										if(status==1) {
-											account.setStatus(TableProp.ACTIVE);
+											account.setStatus(Status.ACTIVE.getStatusCode());
 										}
 										if(status==2) {
-											account.setStatus(TableProp.BLOCKED);
+											account.setStatus(Status.BLOCKED.getStatusCode());
 										}
 										else {
 											System.out.println("Invalid Status");
@@ -979,19 +1025,9 @@ public class BankTest {
 												int empId=scanner.nextInt();
 												System.out.print("Enter Employee's Branch ID: ");
 												int branch=scanner.nextInt();
-												System.out.println("Enter Employee's Access Level \n1.Admin \n2.Employee ");
-												int authMode=scanner.nextInt();
 												scanner.nextLine();
-
 												emp.setId(empId);
 												emp.setBranchId(branch);
-												if(authMode==1) {
-													emp.setAccessLevel(TableProp.ADMIN);
-												}
-												if(authMode==2) {
-													emp.setAccessLevel(TableProp.EMPLOYEE);
-												}
-												Helper.nullCheck(emp.getAccessLevel());
 												Helper.addElement(empDetails,emp);
 											}
 											user.addEmployee(empDetails);
@@ -1083,6 +1119,86 @@ public class BankTest {
 										}
 										break;
 									}
+									case 20:{
+										System.out.println("Enter Customer ID: ");
+										int custId=scanner.nextInt();
+										scanner.nextLine();
+										try {
+											List<AccountDetails> accounts=user.getAccounts(custId);
+											for(AccountDetails account:accounts) {
+												System.out.print("Account Number: "+account.getAccountNumber()+" | ");
+												System.out.print("Account Type: "+account.getAccountType()+" | ");
+												System.out.print("Branch Id: "+account.getBranchId()+" | ");
+												System.out.print("Account Balance "+account.getBalance()+" | ");
+												System.out.println("Account Status: "+account.getStatus());
+											}
+										}
+										catch(ApplicationException e) {
+											logCause(e);
+											System.out.println(e.getMessage());
+										}
+										break;
+									}
+									case 21:{
+										System.out.println("Enter Customer ID: ");
+										int custId=scanner.nextInt();
+										scanner.nextLine();
+										try {
+											CustomerDetails customer=user.getCustomerDetails(custId);
+											System.out.println("Name: "+customer.getName());
+											System.out.println("DOB: "+customer.getDob());
+											System.out.println("Gender: "+customer.getGender());
+											System.out.println("Email: "+customer.getEmail());
+											System.out.println("Mobile: "+customer.getMobile());
+											System.out.println("Aadhar Number: "+customer.getAadhar());
+											System.out.println("PAN Number: "+customer.getPan());
+											int status=customer.getUserStatus();
+											if(status==Status.ACTIVE.getStatusCode()) {
+												System.out.println("User Status: "+TableProp.ACTIVE);
+											}
+											if(status==Status.BLOCKED.getStatusCode()) {
+												System.out.println("User Status: "+TableProp.BLOCKED);	
+											}
+										}
+										catch(ApplicationException e) {
+											logCause(e);
+											System.out.println(e.getMessage());
+										}
+										break;
+									}
+									case 22:{
+										System.out.println("Enter Employee ID: ");
+										int empId=scanner.nextInt();
+										scanner.nextLine();
+										try {
+											EmployeeDetails employee=user.getEmployeeDetails(empId);
+											System.out.println("Name: "+employee.getName());
+											System.out.println("DOB: "+employee.getDob());
+											System.out.println("Gender: "+employee.getGender());
+											System.out.println("Email: "+employee.getEmail());
+											System.out.println("Mobile: "+employee.getMobile());
+											System.out.println("Branch Id: "+employee.getBranchId());
+											int status=employee.getUserStatus();
+											if(status==Status.ACTIVE.getStatusCode()) {
+												System.out.println("User Status: "+TableProp.ACTIVE);
+											}
+											if(status==Status.BLOCKED.getStatusCode()) {
+												System.out.println("User Status: "+TableProp.BLOCKED);	
+											}
+											int level=employee.getUserLevel();
+											if(level==UserLevel.EMPLOYEE.getLevelCode()) {
+												System.out.println("UserLevel: "+TableProp.EMPLOYEE);
+											}
+											if(level==UserLevel.ADMIN.getLevelCode()) {
+												System.out.println("UserLevel: "+TableProp.ADMIN);
+											}
+										}
+										catch(ApplicationException e) {
+											logCause(e);
+											System.out.println(e.getMessage());
+										}
+										break;
+									}
 									default:{
 										System.out.println("Invalid Option");
 									}
@@ -1093,10 +1209,6 @@ public class BankTest {
 							else {
 								System.out.println("Unauthorized User!");
 							}
-						}
-						else {
-							System.out.println("Unauthorized User!");
-						}
 					}
 					else {
 						System.out.println("Incorrect Password");

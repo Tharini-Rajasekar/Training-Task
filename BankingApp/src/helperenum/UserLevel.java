@@ -1,4 +1,4 @@
-package task;
+package helperenum;
 
 public enum UserLevel {
 	CUSTOMER(1),

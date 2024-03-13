@@ -280,3 +280,28 @@ Mar 12, 2024 1:24:50 PM test.BankTest logCause
 SEVERE: Exception occurred: Invalid User
 Mar 12, 2024 3:11:25 PM test.BankTest logCause
 SEVERE: Exception occurred: User is Blocked
+Mar 13, 2024 11:55:34 AM test.BankTest logCause
+SEVERE: Exception occurred: User is Blocked
+Mar 13, 2024 11:58:09 AM test.BankTest logCause
+SEVERE: Exception occurred: Error in Preparing the Query Statement.
+com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Duplicate entry '4-2' for key 'ID'
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:490)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:403)
+	at com.mysql.jdbc.Util.getInstance(Util.java:386)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:936)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3933)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3869)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2524)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2675)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2465)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1915)
+	at com.mysql.jdbc.PreparedStatement.executeUpdateInternal(PreparedStatement.java:2136)
+	at com.mysql.jdbc.PreparedStatement.executeUpdateInternal(PreparedStatement.java:2070)
+	at com.mysql.jdbc.PreparedStatement.executeLargeUpdate(PreparedStatement.java:5187)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2055)
+	at task.Employee.createAccount(Employee.java:116)
+	at test.BankTest.main(BankTest.java:356)
+
