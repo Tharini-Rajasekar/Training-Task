@@ -8,10 +8,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
+import java.util.Map;
 import dbconnection.Connector;
 import dbconnection.DBConnection;
 import helperenum.Status;
+import helperenum.TransactionStatus;
+import helperenum.TransactionType;
+import helperpojo.AccountDetails;
 import helperpojo.Transaction;
+import interfaces.CustomerOperations;
 import querybuilder.SQLKeywords;
 import querybuilder.SpecialCharacters;
 import querybuilder.TableProp;
@@ -19,17 +24,10 @@ import util.ApplicationException;
 import util.BankMessage;
 import util.Helper;
 
-public class Customer {
-	protected int id;
+public class Customer implements CustomerOperations{
 	
 	protected Connection connect=null;
 
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	protected Connection connectToDB() throws ApplicationException {
 		try {
 			String driver=DBConnection.getDriver(Connector.SERVICE_PROVIDER.getValue());
@@ -53,7 +51,7 @@ public class Customer {
 			throw new ApplicationException(BankMessage.DATABASE_CONNECTION_ERROR.getMessage());
 		}
 	}
-	public void disconnectDB() throws ApplicationException{
+	public void disconnect() throws ApplicationException{
 		Helper.nullCheck(connect);
 		try {
 			connect.close();
@@ -62,21 +60,28 @@ public class Customer {
 			throw new ApplicationException(BankMessage.DISCONNECT_ERROR.getMessage(),e);
 		}
 	}
-
-	public List<Long> getAccounts() throws ApplicationException{
+	
+	public Map<Long,AccountDetails> getAccounts(int customerId) throws ApplicationException{
 		checkConnection();
-		StringBuilder query=new StringBuilder(SQLKeywords.SELECT).append(SpecialCharacters.SPACE).append(TableProp.ACCOUNT_NUMBER).append(SpecialCharacters.SPACE);
+		StringBuilder query=new StringBuilder(SQLKeywords.SELECT).append(SpecialCharacters.SPACE).append(SpecialCharacters.ASTERISK).append(SpecialCharacters.SPACE);
 		query.append(SQLKeywords.FROM).append(SpecialCharacters.SPACE).append(TableProp.ACCOUNT_TABLE).append(SpecialCharacters.SPACE);
 		query.append(SQLKeywords.WHERE).append(SpecialCharacters.SPACE);
 		query.append(TableProp.USER_ID).append(SpecialCharacters.EQUALS).append(SpecialCharacters.PLACEHOLDER).append(SpecialCharacters.SEMICOLON);
 		String sql=query.toString();
 		try(PreparedStatement prepStatement = connect.prepareStatement(sql)) {
-			prepStatement.setLong(1,id);
+			prepStatement.setLong(1,customerId);
 			try(ResultSet resultSet = prepStatement.executeQuery()){
-				List<Long> accounts=Helper.getArrayList();
+				Map<Long,AccountDetails> accounts=Helper.getHashMap();
 				while(resultSet.next()) {
+					AccountDetails account=new AccountDetails();
 					long accountNumber=resultSet.getLong(TableProp.ACCOUNT_NUMBER);
-					Helper.addElement(accounts,accountNumber);
+					account.setAccountNumber(accountNumber);
+					account.setAccountType(resultSet.getInt(TableProp.ACCOUNT_TYPE));
+					account.setBranchId(resultSet.getInt(TableProp.BRANCH_ID));
+					account.setId(resultSet.getInt(TableProp.USER_ID));
+					account.setBalance(resultSet.getDouble(TableProp.BALANCE));
+					account.setStatus(resultSet.getInt(TableProp.ACCOUNT_STATUS));
+					Helper.addElement(accounts,accountNumber,account);
 				}
 				return accounts;
 			}
@@ -85,7 +90,6 @@ public class Customer {
 			throw new ApplicationException(BankMessage.STATEMENT_ERROR.getMessage(),e);		
 		}
 	}
-
 	public double checkBalance(long accountNumber) throws ApplicationException {
 		checkConnection();
 		StringBuilder query=new StringBuilder(SQLKeywords.SELECT).append(SpecialCharacters.SPACE).append(TableProp.BALANCE).append(SpecialCharacters.SPACE);
@@ -130,11 +134,11 @@ public class Customer {
 					transaction.setTxnId(resultSet.getString(TableProp.TXN_ID));
 					transaction.setPrimaryAccount(resultSet.getLong(TableProp.PRIMARY_ACCOUNT));
 					transaction.setSecondaryAccount(resultSet.getLong(TableProp.SECONDARY_ACCOUNT));
-					transaction.setTxnType(resultSet.getString(TableProp.TXN_TYPE));
+					transaction.setTxnType(resultSet.getInt(TableProp.TXN_TYPE));
 					transaction.setAmount(resultSet.getDouble(TableProp.AMOUNT));
 					transaction.setTimeInMillis(resultSet.getLong(TableProp.TIMEMILLISECONDS));
 					transaction.setDescription(resultSet.getString(TableProp.DESCRIPTION));
-					transaction.setTxnStatus(resultSet.getString(TableProp.TXN_STATUS));
+					transaction.setTxnStatus(resultSet.getInt(TableProp.TXN_STATUS));
 					transaction.setBalance(resultSet.getDouble(TableProp.BALANCE));
 					
 					Helper.addElement(transactions,transaction);
@@ -155,13 +159,14 @@ public class Customer {
 		int id=getTransactionId();
 		StringBuilder txnId=new StringBuilder(TableProp.TXN_ID_CODE).append(id); 
 		transfer.setTxnId(txnId.toString());
+		transfer.setTxnType(TransactionType.TRANSFER.getTypeCode());
 		try {
 			connect.setAutoCommit(false);
 			if(sender!=receiver&&checkAccount(sender)&&checkAccount(receiver)) {
 			withdrawAmount(sender,transferAmount);
 			depositAmount(receiver,transferAmount);
 			connect.commit();
-			transfer.setTxnStatus(TableProp.SUCCESS);
+			transfer.setTxnStatus(TransactionStatus.SUCCESS.getStatusCode());
 			addTransaction(transfer);
 			transfer.setPrimaryAccount(receiver);
 			transfer.setSecondaryAccount(sender);
@@ -174,7 +179,7 @@ public class Customer {
 		catch(SQLException e) {
 			try {
 				connect.rollback();
-				transfer.setTxnStatus(TableProp.FAILED);
+				transfer.setTxnStatus(TransactionStatus.FAILED.getStatusCode());
 				addTransaction(transfer);
 				transfer.setPrimaryAccount(receiver);
 				transfer.setSecondaryAccount(sender);
@@ -193,46 +198,7 @@ public class Customer {
 			}
 		}	
 	}
-	public void transferFundAcrossBank(Transaction transfer) throws ApplicationException{
-		checkConnection();
-		long sender=transfer.getPrimaryAccount();
-		long receiver=transfer.getSecondaryAccount();
-		double transferAmount=transfer.getAmount();
-		int id=getTransactionId();
-		StringBuilder txnId=new StringBuilder(TableProp.TXN_ID_CODE).append(id); 
-		transfer.setTxnId(txnId.toString());
-		try {
-			connect.setAutoCommit(false);
-			withdrawAmount(sender,transferAmount);
-			//depositAmount(receiver,transferAmount);
-			connect.commit();
-			transfer.setTxnStatus(TableProp.SUCCESS);
-			addTransaction(transfer);
-			//transfer.setPrimaryAccount(receiver);
-			//transfer.setSecondaryAccount(sender);
-			//addTransaction(transfer);
-		}			
-		catch(SQLException e) {
-			try {
-				connect.rollback();
-				transfer.setTxnStatus(TableProp.FAILED);
-				addTransaction(transfer);
-				//transfer.setPrimaryAccount(receiver);
-				//transfer.setSecondaryAccount(sender);
-				//addTransaction(transfer);
-			} catch (SQLException e1) {
-				throw new ApplicationException(BankMessage.ROLLBACK_ERROR.getMessage(),e1);
-			}
-			throw new ApplicationException(BankMessage.TRANSACTION_DECLINED.getMessage(),e);		
-		}
-		finally {
-			try {
-				connect.setAutoCommit(true);
-			} catch (SQLException e) {
-				throw new ApplicationException(BankMessage.COMMIT_ERROR.getMessage(),e);
-			}
-		}	
-	}
+	
 	protected void depositAmount(long accountNumber,double amount) throws ApplicationException {
 		checkConnection();
 		StringBuilder query=new StringBuilder(SQLKeywords.UPDATE).append(SpecialCharacters.SPACE);
@@ -305,9 +271,9 @@ public class Customer {
 			preparedStatement.setLong(2,accountNumber);
 			preparedStatement.setLong(3,transaction.getSecondaryAccount());
 			preparedStatement.setDouble(4,transaction.getAmount());
-			preparedStatement.setString(5,transaction.getTxnType());
+			preparedStatement.setInt(5,transaction.getTxnType());
 			preparedStatement.setString(6,transaction.getDescription());
-			preparedStatement.setString(7,transaction.getTxnStatus());
+			preparedStatement.setInt(7,transaction.getTxnStatus());
 			preparedStatement.setDouble(8,balance);
 			preparedStatement.setLong(9,transaction.getTimeInMillis());
 			preparedStatement.executeUpdate();
@@ -356,5 +322,45 @@ public class Customer {
         	throw new ApplicationException(BankMessage.STATEMENT_ERROR.getMessage(),e);	
         }
 	}
-
+/*
+	public void transferFundAcrossBank(Transaction transfer) throws ApplicationException{
+		checkConnection();
+		long sender=transfer.getPrimaryAccount();
+		long receiver=transfer.getSecondaryAccount();
+		double transferAmount=transfer.getAmount();
+		int id=getTransactionId();
+		StringBuilder txnId=new StringBuilder(TableProp.TXN_ID_CODE).append(id); 
+		transfer.setTxnId(txnId.toString());
+		try {
+			connect.setAutoCommit(false);
+			withdrawAmount(sender,transferAmount);
+			//depositAmount(receiver,transferAmount);
+			connect.commit();
+			transfer.setTxnStatus(TransactionStatus.SUCCESS.getStatusCode());
+			addTransaction(transfer);
+			//transfer.setPrimaryAccount(receiver);
+			//transfer.setSecondaryAccount(sender);
+			//addTransaction(transfer);
+		}			
+		catch(SQLException e) {
+			try {
+				connect.rollback();
+				transfer.setTxnStatus(TransactionStatus.FAILED.getStatusCode());
+				addTransaction(transfer);
+				//transfer.setPrimaryAccount(receiver);
+				//transfer.setSecondaryAccount(sender);
+				//addTransaction(transfer);
+			} catch (SQLException e1) {
+				throw new ApplicationException(BankMessage.ROLLBACK_ERROR.getMessage(),e1);
+			}
+			throw new ApplicationException(BankMessage.TRANSACTION_DECLINED.getMessage(),e);		
+		}
+		finally {
+			try {
+				connect.setAutoCommit(true);
+			} catch (SQLException e) {
+				throw new ApplicationException(BankMessage.COMMIT_ERROR.getMessage(),e);
+			}
+		}	
+	}*/
 }

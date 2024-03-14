@@ -45,6 +45,12 @@ public interface TableProp {
     String CUSTOMER="Customer";
     String EMPLOYEE="Employee";
     String ADMIN="Admin";
+    String TRANSFER="Transfer";
+    String DEPOSIT="Deposited";
+    String WITHDRAW="Withdrawal";
+    String SAVINGS="Savings";
+    String SALARY="Salary";
+    String DEMAT="Demat";
     int NAME_LENGTH=20;
     int LOCATION_LENGTH=20;
     int LENGTH=10;

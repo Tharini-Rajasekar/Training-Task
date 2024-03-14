@@ -4,11 +4,11 @@ public class Transaction {
 	private String txnId;
 	private long primaryAccount;
 	private long secondaryAccount;
-	private String txnType;
+	private int txnType;
 	private double amount;
 	private long timeInMillis;
 	private String description;
-	private String txnStatus;
+	private int txnStatus;
 	private double balance;
 	
 	
@@ -36,12 +36,6 @@ public class Transaction {
 	public void setSecondaryAccount(long secondaryAccount) {
 		this.secondaryAccount = secondaryAccount;
 	}
-	public String getTxnType() {
-		return txnType;
-	}
-	public void setTxnType(String txnType) {
-		this.txnType = txnType;
-	}
 	public long getTimeInMillis() {
 		return timeInMillis;
 	}
@@ -54,10 +48,16 @@ public class Transaction {
 	public void setBalance(double balance) {
 		this.balance = balance;
 	}
-	public String getTxnStatus() {
+	public int getTxnType() {
+		return txnType;
+	}
+	public void setTxnType(int txnType) {
+		this.txnType = txnType;
+	}
+	public int getTxnStatus() {
 		return txnStatus;
 	}
-	public void setTxnStatus(String txnStatus) {
+	public void setTxnStatus(int txnStatus) {
 		this.txnStatus = txnStatus;
 	}
 	public String getDescription() {

@@ -5,11 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import helperenum.TransactionStatus;
+import helperenum.TransactionType;
 import helperenum.UserLevel;
 import helperpojo.AccountDetails;
 import helperpojo.CustomerDetails;
 import helperpojo.Transaction;
 import helperpojo.UserDetails;
+import interfaces.EmployeeOperations;
 import querybuilder.SQLKeywords;
 import querybuilder.SpecialCharacters;
 import querybuilder.TableProp;
@@ -17,20 +20,9 @@ import util.ApplicationException;
 import util.BankMessage;
 import util.Helper;
 
-public class Employee extends Customer{
+public class Employee extends Customer implements EmployeeOperations{
 
-	private int branchId;
 
-	//check balance
-	//Transfer Money
-	//Transaction history
-	//add accounts (with in branch)
-	public int getBranchId() {
-		return branchId;
-	}
-	public void setBranchId(int ifsc) {
-		this.branchId = ifsc;
-	}
 	public void addUser(List<UserDetails> users) throws ApplicationException {
 		checkConnection();
 		StringBuilder query=new StringBuilder(SQLKeywords.INSERT_INTO).append(SpecialCharacters.SPACE);
@@ -109,9 +101,9 @@ public class Employee extends Customer{
 		String sql=query.toString();
 		try(PreparedStatement prepStatement = connect.prepareStatement(sql)) {
 			prepStatement.setInt(1,account.getId());
-			prepStatement.setString(2,account.getAccountType());
+			prepStatement.setInt(2,account.getAccountType());
 			prepStatement.setDouble(3,account.getBalance());
-			prepStatement.setInt(4,branchId);
+			prepStatement.setInt(4,account.getBranchId());
 			prepStatement.executeUpdate();
 		}
 		catch(SQLException e) {
@@ -140,34 +132,7 @@ public class Employee extends Customer{
 			throw new ApplicationException(BankMessage.STATEMENT_ERROR.getMessage(),e);		
 		}
 	}
-	public List<AccountDetails> getAccounts(int customerId) throws ApplicationException{
-		checkConnection();
-		StringBuilder query=new StringBuilder(SQLKeywords.SELECT).append(SpecialCharacters.SPACE).append(SpecialCharacters.ASTERISK).append(SpecialCharacters.SPACE);
-		query.append(SQLKeywords.FROM).append(SpecialCharacters.SPACE).append(TableProp.ACCOUNT_TABLE).append(SpecialCharacters.SPACE);
-		query.append(SQLKeywords.WHERE).append(SpecialCharacters.SPACE);
-		query.append(TableProp.USER_ID).append(SpecialCharacters.EQUALS).append(SpecialCharacters.PLACEHOLDER).append(SpecialCharacters.SEMICOLON);
-		String sql=query.toString();
-		try(PreparedStatement prepStatement = connect.prepareStatement(sql)) {
-			prepStatement.setLong(1,customerId);
-			try(ResultSet resultSet = prepStatement.executeQuery()){
-				List<AccountDetails> accounts=Helper.getArrayList();
-				while(resultSet.next()) {
-					AccountDetails account=new AccountDetails();
-					account.setAccountNumber(resultSet.getLong(TableProp.ACCOUNT_NUMBER));
-					account.setAccountType(resultSet.getString(TableProp.ACCOUNT_TYPE));
-					account.setBranchId(resultSet.getInt(TableProp.BRANCH_ID));
-					account.setId(customerId);
-					account.setBalance(resultSet.getDouble(TableProp.BALANCE));
-					account.setStatus(resultSet.getInt(TableProp.ACCOUNT_STATUS));
-					Helper.addElement(accounts,account);
-				}
-				return accounts;
-			}
-		}
-		catch(SQLException e) {
-			throw new ApplicationException(BankMessage.STATEMENT_ERROR.getMessage(),e);		
-		}
-	}
+
 	public void deleteAccount(long accountNumber) throws ApplicationException {
 		checkConnection();
 		double balance=checkBalance(accountNumber);
@@ -188,7 +153,7 @@ public class Employee extends Customer{
 			throw new ApplicationException(BankMessage.ACCOUNT_DELETE_ERROR.getMessage());
 		}
 	}
-	public void deleteCustomer(int custId) throws ApplicationException {
+	public void deleteUser(int custId) throws ApplicationException {
 		checkConnection();
 		StringBuilder query=new StringBuilder(SQLKeywords.DELETE).append(SpecialCharacters.SPACE).append(SQLKeywords.FROM).append(SpecialCharacters.SPACE);
 		query.append(TableProp.USER_TABLE).append(SpecialCharacters.SPACE).append(SQLKeywords.WHERE).append(SpecialCharacters.SPACE);
@@ -267,12 +232,13 @@ public class Employee extends Customer{
 		int id=getTransactionId();
 		StringBuilder txnId=new StringBuilder(TableProp.TXN_ID_CODE).append(id); 
 		transfer.setTxnId(txnId.toString());
+		transfer.setTxnType(TransactionType.DEPOSIT.getTypeCode());
 		try {
 			connect.setAutoCommit(false);
 			if(checkAccount(account)) {
 				depositAmount(account,depositAmount);
 				connect.commit();
-				transfer.setTxnStatus(TableProp.SUCCESS);
+				transfer.setTxnStatus(TransactionStatus.SUCCESS.getStatusCode());
 				addTransaction(transfer);
 			}
 			else {
@@ -282,7 +248,7 @@ public class Employee extends Customer{
 		catch(SQLException e) {
 			try {
 				connect.rollback();
-				transfer.setTxnStatus(TableProp.FAILED);
+				transfer.setTxnStatus(TransactionStatus.FAILED.getStatusCode());
 				addTransaction(transfer);
 			} 
 			catch (SQLException e1) {
@@ -306,12 +272,13 @@ public class Employee extends Customer{
 		int id=getTransactionId();
 		StringBuilder txnId=new StringBuilder(TableProp.TXN_ID_CODE).append(id); 
 		transfer.setTxnId(txnId.toString());
+		transfer.setTxnType(TransactionType.WITHDRAW.getTypeCode());
 		try {
 			connect.setAutoCommit(false);
 			if(checkAccount(account)) {
 				withdrawAmount(account,withdrawAmount);
 				connect.commit();
-				transfer.setTxnStatus(TableProp.SUCCESS);
+				transfer.setTxnStatus(TransactionStatus.SUCCESS.getStatusCode());
 				addTransaction(transfer);
 			}
 			else {
@@ -321,7 +288,7 @@ public class Employee extends Customer{
 		catch(SQLException e) {
 			try {
 				connect.rollback();
-				transfer.setTxnStatus(TableProp.FAILED);
+				transfer.setTxnStatus(TransactionStatus.FAILED.getStatusCode());
 				addTransaction(transfer);
 			} 
 			catch (SQLException e1) {
@@ -339,7 +306,6 @@ public class Employee extends Customer{
 		}
 	}
 		public CustomerDetails getCustomerDetails(int custId) throws ApplicationException {
-			//SELECT * FROM user_details JOIN customer_details ON user_details.ID =customer_details WHERE user_details.ID=?
 			checkConnection();
 			StringBuilder query=Helper.getStringBuilder(SQLKeywords.SELECT).append(SpecialCharacters.SPACE);
 			query.append(SpecialCharacters.ASTERISK).append(SpecialCharacters.SPACE);
