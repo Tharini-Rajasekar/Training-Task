@@ -305,3 +305,5 @@ com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException: Dupl
 	at task.Employee.createAccount(Employee.java:116)
 	at test.BankTest.main(BankTest.java:356)
 
+Mar 14, 2024 7:58:23 AM test.BankTest logCause
+SEVERE: Exception occurred: Invalid Index

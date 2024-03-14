@@ -2,7 +2,7 @@ package helperpojo;
 
 public class AccountDetails {
 	private long accountNumber;
-	private String accountType;
+	private int accountType;
 	private int id;
 	private double balance;
 	private int branchId;
@@ -20,10 +20,10 @@ public class AccountDetails {
 	public void setAccountNumber(long accountNumber) {
 		this.accountNumber = accountNumber;
 	}
-	public String getAccountType() {
+	public int getAccountType() {
 		return accountType;
 	}
-	public void setAccountType(String accountType) {
+	public void setAccountType(int accountType) {
 		this.accountType = accountType;
 	}
 	public int getId() {

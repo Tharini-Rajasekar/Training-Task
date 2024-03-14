@@ -6,10 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
-import helperpojo.AccountDetails;
 import helperpojo.BranchDetails;
 import helperpojo.EmployeeDetails;
 import helperpojo.UserDetails;
+import interfaces.AdminOperations;
 import querybuilder.SQLKeywords;
 import querybuilder.SpecialCharacters;
 import querybuilder.TableProp;
@@ -17,7 +17,7 @@ import util.ApplicationException;
 import util.BankMessage;
 import util.Helper;
 
-public class Admin extends Employee{
+public class Admin extends Employee implements AdminOperations{
 
 	public void addBranch(List<BranchDetails> branches) throws ApplicationException {
 		checkConnection();
@@ -104,40 +104,15 @@ public class Admin extends Employee{
 			throw new ApplicationException(BankMessage.STATEMENT_ERROR.getMessage(),e);		
 		}
 	}
-	public void createAccount(AccountDetails account) throws ApplicationException {
-		checkConnection();
-		StringBuilder query=new StringBuilder(SQLKeywords.INSERT_INTO).append(SpecialCharacters.SPACE);
-		query.append(TableProp.ACCOUNT_TABLE).append(SpecialCharacters.OPEN_PARENTHESIS);
-		query.append(TableProp.USER_ID).append(SpecialCharacters.COMMA);
-		query.append(TableProp.ACCOUNT_TYPE).append(SpecialCharacters.COMMA);
-		query.append(TableProp.BALANCE).append(SpecialCharacters.COMMA);
-		query.append(TableProp.BRANCH_ID).append(SpecialCharacters.CLOSE_PARENTHESIS).append(SpecialCharacters.SPACE);
-		query.append(SQLKeywords.VALUES).append(SpecialCharacters.OPEN_PARENTHESIS);
-		query.append(SpecialCharacters.PLACEHOLDER).append(SpecialCharacters.COMMA);
-		query.append(SpecialCharacters.PLACEHOLDER).append(SpecialCharacters.COMMA);
-		query.append(SpecialCharacters.PLACEHOLDER).append(SpecialCharacters.COMMA);
-		query.append(SpecialCharacters.PLACEHOLDER).append(SpecialCharacters.CLOSE_PARENTHESIS).append(SpecialCharacters.SEMICOLON);
-		String sql=query.toString();
-		try(PreparedStatement prepStatement = connect.prepareStatement(sql)) {
-			prepStatement.setInt(1,account.getId());
-			prepStatement.setString(2,account.getAccountType());
-			prepStatement.setDouble(3,account.getBalance());
-			prepStatement.setInt(4,account.getBranchId());
-			prepStatement.executeUpdate();
-		}
-		catch(SQLException e) {
-			throw new ApplicationException(BankMessage.STATEMENT_ERROR.getMessage(),e);		
-		}
-	}
 
-	public void deleteUser(int custId) throws ApplicationException {
+	public void deleteUser(int userId) throws ApplicationException {
 		checkConnection();
 		StringBuilder query=new StringBuilder(SQLKeywords.DELETE).append(SpecialCharacters.SPACE).append(SQLKeywords.FROM).append(SpecialCharacters.SPACE);
 		query.append(TableProp.USER_TABLE).append(SpecialCharacters.SPACE).append(SQLKeywords.WHERE).append(SpecialCharacters.SPACE);
 		query.append(TableProp.USER_ID).append(SpecialCharacters.EQUALS).append(SpecialCharacters.PLACEHOLDER).append(SpecialCharacters.SEMICOLON);
 		String sql=query.toString();
 		try(PreparedStatement prepStatement = connect.prepareStatement(sql)) {
-			prepStatement.setLong(1,custId);
+			prepStatement.setLong(1,userId);
 			prepStatement.executeUpdate();
 		}
 		catch(SQLException e) {
@@ -248,9 +223,9 @@ public class Admin extends Employee{
 				return employee;
 			}
 		}
-			catch(SQLException e) {
-				throw new ApplicationException(BankMessage.STATEMENT_ERROR.getMessage(),e);		
-			}	
+		catch(SQLException e) {
+			throw new ApplicationException(BankMessage.STATEMENT_ERROR.getMessage(),e);		
+		}	
 	}
 
 

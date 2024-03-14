@@ -8,6 +8,5 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="/home/tharini-pt7291/Downloads/mysql-connector-java-5.1.49/mysql-connector-java-5.1.49.jar"/>
 	<classpathentry kind="lib" path="/home/tharini-pt7291/Downloads/jbcrypt-0.4.jar"/>
-	<classpathentry kind="lib" path="/home/tharini-pt7291/Downloads/jline-3.20.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

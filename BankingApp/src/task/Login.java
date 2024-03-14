@@ -6,12 +6,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
-
 import dbconnection.Connector;
 import dbconnection.DBConnection;
 import helperenum.Status;
 import helperpojo.UserDetails;
+import interfaces.LoginOperations;
 import querybuilder.SQLKeywords;
 import querybuilder.SpecialCharacters;
 import querybuilder.TableProp;
@@ -19,7 +18,7 @@ import util.ApplicationException;
 import util.BankMessage;
 import util.Helper;
 
-public class Login {
+public class Login implements LoginOperations{
 	private Connection connect=null;
 	private Connection connectToDB() throws ApplicationException {
 		try {
@@ -45,7 +44,7 @@ public class Login {
 			throw new ApplicationException(BankMessage.DATABASE_CONNECTION_ERROR.getMessage());
 		}
 	}
-	public void disconnectDB() throws ApplicationException{
+	public void disconnect() throws ApplicationException{
 		Helper.nullCheck(connect);
 		try {
 			connect.close();
