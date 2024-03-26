@@ -6,6 +6,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import org.mindrot.jbcrypt.BCrypt;
+
 import dbconnection.Connector;
 import dbconnection.DBConnection;
 import helperenum.Status;
@@ -53,6 +56,11 @@ public class Login implements LoginOperations{
 			throw new ApplicationException(BankMessage.DISCONNECT_ERROR.getMessage(),e);
 		}
 	}
+	public boolean login(UserDetails user) throws ApplicationException {
+		String password=signIn(user.getId());
+		return checkPassword(user.getPassword(),password);
+	}
+	
 	public String signIn(int userId) throws ApplicationException {
 		checkConnection();
 		checkUserStatus(userId);
@@ -75,6 +83,7 @@ public class Login implements LoginOperations{
 			throw new ApplicationException(BankMessage.STATEMENT_ERROR.getMessage(),e);
 		}
 	}
+	
 	public int getUserLevel(int userId) throws ApplicationException {
 		checkConnection();
 		StringBuilder query=new StringBuilder(SQLKeywords.SELECT).append(SpecialCharacters.SPACE).append(TableProp.USER_LEVEL).append(SpecialCharacters.SPACE);
@@ -187,6 +196,14 @@ public class Login implements LoginOperations{
 		catch(SQLException e) {
 			throw new ApplicationException(BankMessage.STATEMENT_ERROR.getMessage(),e);
 		}
+	}
+	
+	private String hashPassword(String plainPassword) {
+		return BCrypt.hashpw(plainPassword, BCrypt.gensalt());
+	}
+
+	private boolean checkPassword(String plainPassword, String hashedPassword) {
+		return BCrypt.checkpw(plainPassword, hashedPassword);
 	}
 
 }

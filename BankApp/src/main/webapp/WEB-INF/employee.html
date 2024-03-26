@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+    <link rel="stylesheet" href="userdash.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Billionaire</h2>
+        <h3>Bank</h3>
+        <ul>
+            <li><a href="#" onclick=toggleSection('customers')><i class="material-icons">home</i>Home</a></li>
+            <li>
+                <a href="#"><i class="material-icons">layers</i>Services</a>
+                <ul class="dropdown">
+               	    <li><a href="#" onclick=toggleSection('customers')>Customers</a>
+                    <li><a href="#" onclick=toggleSection('accountDetails')>Accounts</a></li>
+               	    <li><a href="#" onclick=toggleSection('transfer')>Transfer</a></li>
+               	    <li><a href="#" onclick=toggleSection('deposit')>Deposit Fund</a></li>
+               	    <li><a href="#" onclick=toggleSection('withdraw')>Withdraw Fund</a></li>   
+                </ul>
+            </li>
+            <li><a href="#" onclick=toggleSection('info')><i class="material-icons">help</i>Help</a></li>
+            <li><a href="index.html"> <i class="material-icons">exit_to_app</i>Log Out</a></li>
+        </ul>
+    </div>
+     <div class="content">   
+        <div class="container">
+        
+        <div id="customers">
+           <h2>Customers</h2>
+              <br/>
+                 <table>
+ 		    <tbody>
+ 		      <tr>
+ 		         <td>
+ 		           <input type="checkbox" id="myCheckbox" name="myCheckbox" value="isChecked">
+			 </td>
+     			 <td>Customer Id</td>
+      			 <td><button class="viewDetails" onclick="toggleSection('customerDetails')">View Details</button></td>
+                      </tr>
+          	    </tbody>
+	        </table>
+	        <footer>
+	          <button class="addNew" onclick="toggleSection('newUser')">New Customer</button>
+	          <button class="delete" onclick="">Delete</button>
+	          <br/>
+	          <div class="pagination">
+  			<a href="#">&laquo;</a>
+  			<a href="#">1</a>
+  			<a href="#">2</a>
+  			<a href="#">3</a>
+  			<a href="#">4</a>
+ 			<a href="#">&raquo;</a>
+     	       </div>
+	        </footer>
+        </div>
+          
+        <div id="customerDetails" class="hidden">
+          <h2>Customer Details</h2>
+          <form id="customerForm">
+          <label for="customerId">Customer Id</label>
+            <input type="number" id="id" name="customerId" placeholder="Customer Id" min=0>
+            <br/>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name">
+            <br/>
+            <label for="dob">DOB</label>
+            <input type="date" id="dob" name="dob">
+            <br/>
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender">
+                <option value="1">Male</option>
+                <option value="2">Female</option>
+                <option value="3">Other</option>
+            </select>
+            <br/>
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" placeholder="email">
+            <br/>
+            <label for="mobile">Mobile</label>
+            <input type="tel" id="mobile" name="mobile" placeholder="Mobile Number">
+            <br/>
+            <label for="PAN">PAN</label>
+            <input type="text" id="pan" name="pan" placeholder="PAN">
+            <br/>
+            <label for="aadhar">Aadhar</label>
+            <input type="text" id="aadhar" name="aadhar" placeholder="Aadhar" >
+            <br/>
+            <label for="customerStatus">Status</label>
+            <select id="customerStatus" name="customerStatus">
+                <option value="1">Active</option>
+                <option value="2">Blocked</option>
+            </select>
+            <br/>
+            <button type="edit" onclick=toggleSection('updateCustomer')>Edit</button>
+            <button type="delete">Delete</button>
+        </form>
+        </div>
+        
+        <div id="newUser" class="hidden" >
+           <h2>New User</h2>
+        <br/>
+        <form id="customerForm">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name">
+            <br/>
+            <label for="dob">DOB</label>
+            <input type="date" id="dob" name="dob">
+            <br/>
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender">
+                <option value="1">Male</option>
+                <option value="2">Female</option>
+                <option value="3">Other</option>
+            </select>
+            <br/>
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" placeholder="email">
+            <br/>
+            <label for="mobile">Mobile</label>
+            <input type="tel" id="mobile" name="mobile" placeholder="Mobile Number">
+            <br/>
+            <button type="create">Create</button>
+            <button type="next" onclick=toggleSection('newCustomer')>Next</button>
+        </div>
+        
+        <div id="newCustomer" class="hidden">
+           <h2>New Customer</h2>
+        <br/>
+        <form id="customerForm" >
+            <label for="customerId">Customer Id</label>
+            <input type="number" id="id" name="customerId" placeholder="Customer Id" min=0>
+            <br/>
+            <label for="PAN">PAN Number</label>
+            <input type="text" id="pan" name="pan" placeholder="PAN">
+            <br/>
+            <label for="aadhar">Aadhar Number</label>
+            <input type="text" id="aadhar" name="aadhar" placeholder="Aadhar">
+            <br/>
+            <button type="submit">Submit</button>
+        </form>
+        </div>
+        
+        <div id="updateCustomer" class="hidden">
+           <form>
+           	<label for="email">Email</label>
+            	<input type="text" id="email" name="email" placeholder="email">
+            	<br/>
+            	<label for="mobile">Mobile</label>
+            	<input type="tel" id="mobile" name="mobile" placeholder="Mobile Number">
+            	<br/>
+            	 <label for="customerStatus">Status</label>
+           	 <select id="customerStatus" name="customerStatus">
+                	<option value="1">Active</option>
+                	<option value="2">Blocked</option>
+            	</select>
+            	<br/>
+            	<button type="submit">Update</button>
+           </form>
+        </div>
+        
+        <div id="accountDetails" class="hidden">
+        <h2>Accounts</h2>
+          <table>
+                <thead>
+                    <tr>
+                       <td></td>
+                        <th>Account No.</th>
+                        <th>Type</th>
+                        <th>Branch</th>
+                        <th>Balance</th>
+                        <th>Status</th>
+                       <th></th>
+                      
+                    </tr>
+                </thead>
+                <tbody>
+                      <td><input type="checkbox" id="myCheckbox" name="myCheckbox" value="isChecked"></td>
+                        <td>Acc1</td>
+                        <td>Type1</td>
+                        <td>Branch1</td>
+                        <td>Balance1</td>
+                        <td>Status1</td>
+                        <td><button type="edit" onclick=toggleSection('accountUpdate')>Edit</button>
+                        <button type="statement" onclick=toggleSection('txnHistory')>Statement</button></td>
+                </tbody>
+            </table>
+            <footer>
+	          <button class="addNew" onclick="toggleSection('newAccount')">New Account</button>
+	          <button class="delete" onclick="">Delete</button>
+	          <div class="pagination">
+  			<a href="#">&laquo;</a>
+  			<a href="#">1</a>
+  			<a href="#">2</a>
+  			<a href="#">3</a>
+  			<a href="#">4</a>
+ 			<a href="#">&raquo;</a>
+     	       </div>
+	        </footer>
+        </div>
+        
+        <div id="newAccount" class="hidden">
+            <h2>New Account</h2>
+            <br/>
+            <form id="accountForm">
+            <label for="customerId">Customer Id</label>
+            <input type="number" id="customerId" name="customerId" placeholder="Customer Id" min=0>
+            <br/>
+            <label for="accountType">Account Type</label>
+            <select id="accountType" name="accountType">
+                <option value="1">Savings</option>
+                <option value="2">Salary</option>
+                <option value="3">Demat</option>
+            </select>
+            <br/>
+            <label for="branchId">Branch Id</label>
+            <select id="branchId" name="branchId">
+                <option value="id">Id</option>
+            </select>
+            <br/>
+            <label for="amount">Initial Deposit</label>
+            <input type="number" id="amount" name="amount" placeholder="Amount" min=1>
+            <br/>
+            <button type="submit">Submit</button>
+        </form>
+        </div>
+        
+        <div id="accountUpdate" class="hidden">
+           <h2>Update Account</h2>
+            <br/>
+            <form id="accountForm">
+            <label for="customerId">Customer Id</label>
+            <input type="number" id="customerId" name="customerId" placeholder="Customer Id" min=0>
+            <br/>
+            <label for="accountType">Account Type</label>
+            <select id="accountType" name="accountType">
+                <option value="1">Savings</option>
+                <option value="2">Salary</option>
+                <option value="3">Demat</option>
+            </select>
+            <br/>
+            <label for="branchId">Branch Id</label>
+            <select id="branchId" name="branchId">
+                <option value="id">Id</option>
+            </select>
+            <br/>
+            <label for="amount">Initial Deposit</label>
+            <input type="number" id="amount" name="amount" placeholder="Amount" min=1>
+            <br/>
+            <label for="accountStatus">Status</label>
+            <select id="accountStatus" name="accountStatus">
+                <option value="1">Active</option>
+                <option value="2">Block</option>
+            </select>
+            <br/>
+            <button type="update">Update</button>
+        </div>
+        
+        <div id="txnHistory" class="hidden">
+         <h2>Transaction History</h2>
+         <br/>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Account Number</th>
+                        <th>Transaction Type</th>
+                        <th>Amount</th>
+                        <th>Date & Time</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Add txn history here -->
+                </tbody>
+            </table>
+            <footer>
+              <div class="pagination">
+  		<a href="#">&laquo;</a>
+  		<a href="#">1</a>
+  		<a href="#">2</a>
+  		<a href="#">3</a>
+  		<a href="#">4</a>
+ 		<a href="#">&raquo;</a>
+     	       </div>
+    	   </footer>
+        </div>
+        
+        <div id="transfer" class="hidden">
+	  <form id="transferForm">
+          <h2>Transfer Fund</h2>
+          <br/>
+            <label for="senderAccount">Sender Account</label>
+            <input type="number" id="receiverAccount" name="receiverAccount" placeholder="Receiver Account Number" min=0>
+            <br/>
+            <label for="receiverAccount">Receiver Account</label>
+            <input type="number" id="receiverAccount" name="receiverAccount" placeholder="Receiver Account Number" min=0>
+            <br/>
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" name="amount" placeholder="Amount" min=1>
+            <br/>
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4" placeholder="Description"></textarea>
+            <br/>
+            <button type="submit">Submit</button>
+        </form>
+	</div>
+	
+	<div id="withdraw" class="hidden">
+        <h2>Withdraw Fund</h2>
+        <br/>
+        <form id="transferForm">
+            <label for="Account">Account Number</label>
+            <input type="number" id="Account" name="Account" placeholder="Account Number" min=0>
+            <br/>
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" name="amount" placeholder="Amount" min=1>
+            <br/>
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4" placeholder="Description"></textarea>
+            <br/>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+        
+        <div id="deposit" class="hidden">
+        <h2>Deposit Fund</h2>
+        <br/>
+        <form id="transferForm">
+            <label for="Account">Account Number</label>
+            <input type="number" id="Account" name="Account" placeholder="Account Number" min=0>
+            <br/>
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" name="amount" placeholder="Amount" min=1>
+            <br/>
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4" placeholder="Description"></textarea>
+            <br/>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+        
+        
+        <div id="info" class="hidden">
+    <div class="widget">
+     <div class="notice-widget">
+          <h3>Safety Tips</h3>
+          <hr/>
+    	 <br/>
+          <ul>
+        <li>Keep your login credentials confidential. Never share your password with anyone.</li>
+        <br/>
+        <li>Enable two-factor authentication for added security.</li>
+        <br/>
+        <li>Beware of phishing emails and fraudulent websites. Always verify the authenticity of requests.</li>
+      </ul>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    
+    <script src="script.js"></script>
+
+</body>
+</html>
