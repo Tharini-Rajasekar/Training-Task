@@ -1163,7 +1163,7 @@ public class BankTest {
 									scanner.nextLine();
 									System.out.print("Enter Manager Name: ");
 									String name=scanner.nextLine();
-									System.out.print("Enter Manager User Name: ");
+									System.out.print("Enter Manager User Id: ");
 									int empId=scanner.nextInt();
 									scanner.nextLine();
 									BranchDetails updateBranch=new BranchDetails();

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Login Page</title>
+   <link rel="stylesheet" href="styles.css">
+ </head>
+ 
+ <body>
+	<header>
+	  <h2> Billionarie Bank </h2>
+	  <nav class="navigation">
+	      <a href="#">Home</a>
+	      <a href="#">Contact</a>
+	      <button class="btnLogin-popup">Login</button>
+	  </nav>
+	</header>
+	
+	<div class="wrapper">
+	    <div class="form-box login">
+	        <h2>Login</h2>
+	        <form action="/login">
+	           <div class="input-box">
+	             <label>User ID</label>
+	             <br/>
+	             <input id="userId"required>
+	           </div>
+	           <div class="input-box">
+	            <label>Password</label>
+	            <br/>
+	             <input id="password" type="password"required>
+	           </div>
+	           <div class="forgot-password">
+	            <a href="#">Forgot Password?</a>
+	           </div>
+	           <div>
+	             <button type="submit" class="btn">Login</button>
+	           </div>
+	           <div class="sign-up">
+	             <p> Don't have an account? <a href="#" class="signup-link">Sign up</a></p>
+	           </div>
+	         </form>
+	       </div>
+	       
+	       <div class="form-box register">
+	        <h2>Registration</h2>
+	        <form action="/register">
+	           <div class="input-box">
+	             <label>User ID</label>
+	             <br/>
+	             <input id="userid"required>
+	           </div>
+	           <div class="input-box">
+	             <label>DOB</label>
+	             <br/>
+	             <input id="dob"required>
+	           </div>
+	           <div class="input-box">
+	            <label>Password</label>
+	            <br/>
+	             <input type="password"required>
+	           </div>
+	           <div>
+	             <button type="submit" class="btn">Register</button>
+	           </div>
+	           <div class="sign-up">
+	             <p> Already have an account? <a href="#" class="signin-link">Login</a></p>
+	           </div>
+	         </form>
+	       </div>
+	     </div>
+	     <div class="homeWidget">
+	     </div>
+	   <script src="script.js"></script>
+ </body>
+</html>

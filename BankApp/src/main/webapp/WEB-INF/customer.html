@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link rel="stylesheet" href="userdash.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+    <div class="sidebar">
+       <h2>Billionaire</h2>
+        <h3>Bank</h3>
+        <ul>
+            <li><a href="#" onclick="toggleSection('accounts')"><i class="material-icons">home</i>Home</a></li>
+            <li>
+                <a href="#"><i class="material-icons">layers</i>Services</a>
+                <ul class="dropdown">
+                    
+                    <li><a href="#" onclick="toggleSection('transferFund')" >Transfer Fund</a></li>
+                   
+                </ul>
+            </li>
+            <li><a href="#" onclick="toggleSection('custHelp')"><i class="material-icons">help</i>Help</a></li>
+            <li><a href="index.html"><i class="material-icons">exit_to_app</i>Logout</a></li>
+        </ul>
+    </div>
+     <div class="content">
+        
+    <div class="container">
+ 
+            <div id="accounts">
+               <h2>My Accounts</h2>
+               <br/>
+                 <table>
+ 		    <tbody>
+ 		      <tr>
+     			 <td>Account number</td>
+      			 <td><button class="viewDetails" onclick="toggleSection('accountDetails')">View Details</button>
+        		 <button class="viewStatements" onclick="toggleSection('txnHistory')">Statements</button></td>
+                      </tr>
+          	    </tbody>
+	        </table>
+            </div>
+            
+           <div id="accountDetails" class="hidden">
+            <h2>Account Details</h2>
+            <br/>
+             <form id="accountForm">
+            <label for="accountNo">Account Number</label>
+             <input type="number" id="receiverAccount" name="receiverAccount" >
+            <br/>
+            <label for="accountType">Type</label>
+            <input type="text" id="accountType" name="accountType" >
+            <br/>
+            <label for="branch">Branch</label>
+            <input type="number" id="branch" name="branch">
+            <br/>
+            <label for="balance">Balance</label>
+            <input type="number" id="balance" name="balance">
+            <br/>
+           <label for="status">Balance</label>
+            <input type="text" id="status" name="status">
+            <br/>
+        </form>
+        </div>
+        
+       <div id="txnHistory" class="hidden">
+         <h2>Transaction History</h2>
+         <br/>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Account Number</th>
+                        <th>Transaction Type</th>
+                        <th>Amount</th>
+                        <th>Date and Time</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                        <th>Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Add txn history here -->
+                </tbody>
+            </table>
+            <footer>
+              <div class="pagination">
+  		<a href="#">&laquo;</a>
+  		<a href="#">1</a>
+  		<a href="#">2</a>
+  		<a href="#">3</a>
+  		<a href="#">4</a>
+ 		<a href="#">&raquo;</a>
+     	       </div>
+    	   </footer>
+        </div>
+
+	<div id="transferFund" class="hidden">
+	  <form id="transferForm">
+          <h2>Transfer Fund</h2>
+          <br/>
+            <label for="senderAccount">My Account</label>
+            <select id="senderAccount" name="senderAccount">
+                <option value="1">Account 1</option>
+                <option value="2">Account 2</option>
+            </select>
+            <br/>
+            <label for="receiverAccount">Receiver Account</label>
+            <input type="number" id="receiverAccount" name="receiverAccount" placeholder="Receiver Account Number" min=0>
+            <br/>
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" name="amount" placeholder="Amount" min=1>
+            <br/>
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4" placeholder="Description"></textarea>
+            <br/>
+            <button type="submit">Submit</button>
+        </form>
+	</div>
+	
+	<div id="custHelp" class="hidden">
+	   <div class="widget">
+     <div class="notice-widget">
+          <h3>Safety Tips</h3>
+          <hr/>
+    	 <br/>
+          <ul>
+        <li>Keep your login credentials confidential. Never share your password with anyone.</li>
+        <br/>
+        <li>Enable two-factor authentication for added security.</li>
+        <br/>
+        <li>Beware of phishing emails and fraudulent websites. Always verify the authenticity of requests.</li>
+      </ul>
+        </div>
+	<div class="notice-widget">
+    	 <h3>Contact Details</h3>
+    	 <hr/>
+    	 <br/>
+    	 <ul>
+    	 <li>Customer Support: 1-800-123-4567</li>
+    	 <br/>
+    	 <li>Email: support@bbank.com</li>
+    	 </ul>
+	</div>
+    </div>
+	</div>
+        
+    </div>
+  </div>
+  
+  <script src="script.js"></script>
+  
+</body>
+</html>
